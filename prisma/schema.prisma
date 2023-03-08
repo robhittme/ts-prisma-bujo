@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model migration {
+  digest   String @id
+  name     String
+  contents String
+
+  @@map("__migration")
+}
+
+model entries {
+  id                 Int      @id @default(autoincrement())
+  text               String?
+  entry_type         String?  @default("task")
+  completed          Boolean? @default(false)
+  priority           Boolean? @default(false)
+  created_timestamp  BigInt   @default(dbgenerated("EXTRACT(epoch FROM now())"))
+  modified_timestamp BigInt   @default(dbgenerated("EXTRACT(epoch FROM now())"))
+}
+
+model sessions {
+  id                 Int     @id @default(autoincrement())
+  user_id            Int?
+  session_token      String  @default(dbgenerated("substr(md5((random())::text), 0, 32)"))
+  expires_at         BigInt? @default(dbgenerated("(EXTRACT(epoch FROM now()) + (604800)::numeric)"))
+  created_timestamp  BigInt  @default(dbgenerated("EXTRACT(epoch FROM now())"))
+  modified_timestamp BigInt  @default(dbgenerated("EXTRACT(epoch FROM now())"))
+  users              users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  id                 Int        @id @default(autoincrement())
+  password_hash      String
+  username           String     @unique
+  verification_code  Int?       @default(dbgenerated("(floor((random() * (1000000)::double precision)))::integer"))
+  verified           Boolean?   @default(false)
+  passwordreset      Boolean?   @default(false)
+  created_timestamp  BigInt     @default(dbgenerated("EXTRACT(epoch FROM now())"))
+  modified_timestamp BigInt     @default(dbgenerated("EXTRACT(epoch FROM now())"))
+  sessions           sessions[]
+}
