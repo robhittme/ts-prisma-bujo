@@ -46,3 +46,17 @@ model users {
   modified_timestamp BigInt     @default(dbgenerated("EXTRACT(epoch FROM now())"))
   sessions           sessions[]
 }
+
+model collections {
+  id Int @id @default(autoincrement())
+  name String 
+  list_items list_item[]
+}
+
+model list_item {
+  id Int @id @default(autoincrement())
+  text String
+  collection collections @relation(fields:[collection_id], references: [id])
+  collection_id Int
+}
+

@@ -1,0 +1,43 @@
+digraph {
+    node [shape=box, style=filled];    
+    subgraph cluster_legend {
+        rankdir=TB
+        label="Legend"
+        completed [label="Completed" fillcolor="darkolivegreen3"]
+        todo [label="todo" fillcolor="tomato"]
+        feature [label="feature"] 
+    }
+    rankdir=LR
+    pullFromExistingSchema [fillcolor=darkolivegreen3]
+    Prisma 
+    Entries 
+    Collections
+    
+
+    addNewMigration [fillcolor=darkolivegreen3]
+    publishSchema [fillcolor=darkolivegreen3]
+    pullSchema [fillcolor=darkolivegreen3]
+    createEntry [fillcolor=darkolivegreen3]
+    getEntries [fillcolor=darkolivegreen3]
+    updateEntries [fillcolor=darkolivegreen3]
+    deleteEntries [fillcolor=darkolivegreen3]
+    getDailyEntries [fillcolor=tomato]
+    getMonthlyEntries [fillcolor=tomato]
+    getYearlyEntries [fillcolor=tomato]
+    entryMigration [fillcolor=tomato]
+    yesterdayEntries [fillcolor=tomato]
+    Prisma -> pullFromExistingSchema
+    Prisma -> addNewMigration
+    Prisma -> pullSchema 
+    Prisma -> publishSchema
+    Entries -> createEntry
+    Entries -> getEntries 
+    Entries -> updateEntries 
+    Entries -> deleteEntries 
+    Entries -> getYearlyEntries
+    Entries -> getMonthlyEntries
+    Entries -> getDailyEntries
+    Notifications -> yesterdayEntries -> entryMigration 
+    
+}
+    
