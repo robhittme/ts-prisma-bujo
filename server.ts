@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 import { responseTimeMiddleware } from './responseMiddleware';
 import express, { Request, Response } from 'express';
 import type { Config } from './config'
@@ -19,6 +19,18 @@ const serializeResponse = (entry: any): Entry => {
     created_timestamp: entry.created_timestamp.toString(),
     modified_timestamp: entry.modified_timestamp.toString()
   } 
+}
+const entryTypeConverter = (text: string): Array<string> => {
+  const [sym, ...rest] = text.split('');
+  switch(sym) {
+    case '.':
+      return ['task', rest.join('').trim()]
+    case 'o':
+      return ['event', rest.join('').trim()]
+    case '-':
+      return ['note', rest.join('').trim()]
+  }
+  return ['task', text];
 }
 
 export const init = (config: Config) => {
@@ -41,9 +53,11 @@ export const init = (config: Config) => {
 
   app.post(`/entry`, async (req: Request, res: Response) => {
     const { text } = req.body
+    const [entryType, txt] = entryTypeConverter(text);
     const entry = await prisma.entries.create({
       data: {
-        text
+        text: txt,
+        entry_type: entryType
       }
     })
 
