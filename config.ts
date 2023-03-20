@@ -23,7 +23,7 @@ export type Config = {
 
 export const config: Config = {
     http: {
-        port: envAsInt('PORT', 3000)
+        port: envAsInt('PORT', 4444)
     },
     db: {
         user: process.env.DB_USER || 'postgres',

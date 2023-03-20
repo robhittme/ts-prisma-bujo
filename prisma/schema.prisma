@@ -21,6 +21,7 @@ model entries {
   entry_type         String?  @default("task")
   completed          Boolean? @default(false)
   priority           Boolean? @default(false)
+  deadline           BigInt?  @default(dbgenerated("EXTRACT(epoch FROM now())"))
   created_timestamp  BigInt   @default(dbgenerated("EXTRACT(epoch FROM now())"))
   modified_timestamp BigInt   @default(dbgenerated("EXTRACT(epoch FROM now())"))
 }
@@ -56,7 +57,7 @@ model collections {
 model list_item {
   id Int @id @default(autoincrement())
   text String
-  collection collections @relation(fields:[collection_id], references: [id])
-  collection_id Int
+  collection collections @relation(fields:[collectionId], references: [id])
+  collectionId Int
 }
 
