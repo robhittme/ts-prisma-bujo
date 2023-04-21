@@ -11,7 +11,7 @@ export const init = (config: Config) => {
     app.use(responseTimeMiddleware)
     app.use(mount('/bujo', entries(prisma)));
     app.listen(config.http.port, undefined, undefined, () =>
-        console.log(`🚀 Server ready at: http://localhost:${config.http.port}`))
+        console.log(`Server ready at: http://localhost:${config.http.port}`))
 }
 
 
